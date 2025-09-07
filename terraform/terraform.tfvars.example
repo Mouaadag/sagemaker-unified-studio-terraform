@@ -1,0 +1,31 @@
+# Terraform variables example file
+# Copy this file to terraform.tfvars and customize the values
+
+# AWS Configuration
+aws_region = "us-east-1" # Change to your preferred region
+
+# Project Configuration
+project_name = "sagemaker-ml-demo" # Change to your project name
+environment  = "dev"               # dev, staging, or prod
+
+# Model Configuration
+model_name = "iris-classifier"
+
+# SageMaker Instance Types
+# Training instance (cost-optimized for demo)
+training_instance_type = "ml.m5.large" # Options: ml.m5.large, ml.m5.xlarge, ml.c5.xlarge
+
+# Inference instance (cost-optimized for demo)
+inference_instance_type = "ml.t2.medium" # Options: ml.t2.medium, ml.m5.large, ml.c5.large
+
+# Auto Scaling Configuration
+enable_auto_scaling             = false # Set to true to enable auto scaling
+min_capacity                    = 1     # Minimum instances
+max_capacity                    = 3     # Maximum instances
+target_invocations_per_instance = 100   # Target invocations per instance
+
+# SageMaker Notebook Instance Configuration
+notebook_instance_type  = "ml.t3.medium" # Options: ml.t3.medium, ml.t3.large, ml.m5.large
+notebook_volume_size    = 20             # Volume size in GB
+enable_lifecycle_config = true           # Enable custom setup scripts
+default_code_repository = ""             # Optional: Git repository URL
