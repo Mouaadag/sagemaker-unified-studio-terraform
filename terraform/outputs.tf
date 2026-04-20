@@ -149,21 +149,21 @@ output "quick_start_guide" {
   value = {
     studio_access_url = aws_sagemaker_domain.unified_studio_domain.url
     steps = [
-      "1. 🎯 Access SageMaker Unified Studio at: ${aws_sagemaker_domain.unified_studio_domain.url}",
-      "2. 👤 Login with your AWS credentials and select user profile: ${aws_sagemaker_user_profile.default_user.user_profile_name}",
-      "3. 🚀 Launch JupyterLab, RStudio, or Canvas apps from the Studio interface",
-      "4. 📂 Your project files are automatically synced from S3: ${aws_s3_bucket.ml_artifacts.bucket}",
-      "5. 📊 Use the data catalog to discover and govern your data assets",
-      "6. 🤝 Collaborate with team members using shared notebooks and models",
-      "7. 🎨 Try SageMaker Canvas for no-code ML model building",
-      "8. 🤖 Access generative AI capabilities through integrated Bedrock",
-      "9. 🔒 All activities are logged and governed with fine-grained access controls"
+      "1.  Access SageMaker Unified Studio at: ${aws_sagemaker_domain.unified_studio_domain.url}",
+      "2.  Login with your AWS credentials and select user profile: ${aws_sagemaker_user_profile.default_user.user_profile_name}",
+      "3.  Launch JupyterLab, RStudio, or Canvas apps from the Studio interface",
+      "4.  Your project files are automatically synced from S3: ${aws_s3_bucket.ml_artifacts.bucket}",
+      "5.  Use the data catalog to discover and govern your data assets",
+      "6.  Collaborate with team members using shared notebooks and models",
+      "7.  Try SageMaker Canvas for no-code ML model building",
+      "8.  Access generative AI capabilities through integrated Bedrock",
+      "9.  All activities are logged and governed with fine-grained access controls"
     ]
     compliance_features = [
-      "✅ S3 public access blocked and encrypted",
-      "✅ CloudWatch logging for all activities",
-      "✅ IAM roles with least privilege access",
-      "✅ Resource tagging for governance and billing"
+      " S3 public access blocked and encrypted",
+      " CloudWatch logging for all activities",
+      " IAM roles with least privilege access",
+      " Resource tagging for governance and billing"
     ]
   }
 }

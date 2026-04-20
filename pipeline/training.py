@@ -60,7 +60,7 @@ class TrainingPipeline:
         Returns:
             Tuple of (X_train, X_test, y_train, y_test)
         """
-        self.logger.info("🔄 Preparing iris dataset for training")
+        self.logger.info(" Preparing iris dataset for training")
         
         # Load iris dataset
         iris = load_iris()
@@ -71,12 +71,12 @@ class TrainingPipeline:
             X, y, test_size=0.2, random_state=42, stratify=y
         )
         
-        self.logger.info(f"✅ Data prepared: {X_train.shape[0]} training samples, {X_test.shape[0]} test samples")
+        self.logger.info(f" Data prepared: {X_train.shape[0]} training samples, {X_test.shape[0]} test samples")
         
         # Log class distribution
         unique, counts = np.unique(y_train, return_counts=True)
         class_dist = dict(zip(unique, counts))
-        self.logger.info(f"📊 Training class distribution: {class_dist}")
+        self.logger.info(f" Training class distribution: {class_dist}")
         
         return X_train, X_test, y_train, y_test
     
@@ -91,7 +91,7 @@ class TrainingPipeline:
         Returns:
             Trained RandomForest model
         """
-        self.logger.info("🎯 Training local RandomForest model for validation")
+        self.logger.info(" Training local RandomForest model for validation")
         
         # Create and train model
         model = RandomForestClassifier(
@@ -105,7 +105,7 @@ class TrainingPipeline:
         model.fit(X_train, y_train)
         training_time = time.time() - start_time
         
-        self.logger.info(f"✅ Local model training completed in {training_time:.2f} seconds")
+        self.logger.info(f" Local model training completed in {training_time:.2f} seconds")
         
         return model
     
@@ -122,7 +122,7 @@ class TrainingPipeline:
         Returns:
             Dictionary containing evaluation metrics
         """
-        self.logger.info("📊 Evaluating model performance")
+        self.logger.info(" Evaluating model performance")
         
         # Predictions
         y_pred = model.predict(X_test)
@@ -156,8 +156,8 @@ class TrainingPipeline:
             'evaluation_timestamp': datetime.now().isoformat()
         }
         
-        self.logger.info(f"📈 Model Accuracy: {accuracy:.4f}")
-        self.logger.info(f"📈 CV Mean Accuracy: {cv_mean:.4f} (±{cv_std:.4f})")
+        self.logger.info(f" Model Accuracy: {accuracy:.4f}")
+        self.logger.info(f" CV Mean Accuracy: {cv_mean:.4f} (±{cv_std:.4f})")
         
         # Store metrics for pipeline decision
         self.training_metrics = evaluation_results
@@ -174,7 +174,7 @@ class TrainingPipeline:
         Returns:
             Training job name
         """
-        self.logger.info("🚀 Starting SageMaker training job")
+        self.logger.info(" Starting SageMaker training job")
         
         # Create training script
         training_script = self._create_training_script()
@@ -199,19 +199,19 @@ class TrainingPipeline:
             base_job_name=self.config.MODEL_NAME_PREFIX
         )
         
-        self.logger.info(f"📝 Training job name: {self.training_job_name}")
+        self.logger.info(f" Training job name: {self.training_job_name}")
         
         # Start training
         try:
             sklearn_estimator.fit()
             self.model_artifacts_s3_path = sklearn_estimator.model_data
-            self.logger.info(f"✅ Training job completed successfully")
-            self.logger.info(f"📦 Model artifacts: {self.model_artifacts_s3_path}")
+            self.logger.info(f" Training job completed successfully")
+            self.logger.info(f" Model artifacts: {self.model_artifacts_s3_path}")
             
             return self.training_job_name
             
         except Exception as e:
-            self.logger.error(f"❌ Training job failed: {str(e)}")
+            self.logger.error(f" Training job failed: {str(e)}")
             raise
     
     def _create_training_script(self) -> str:
@@ -288,24 +288,24 @@ if __name__ == "__main__":
         accuracy = evaluation_results['accuracy']
         cv_accuracy = evaluation_results['cv_mean_accuracy']
         
-        self.logger.info(f"🎯 Checking deployment criteria:")
+        self.logger.info(f" Checking deployment criteria:")
         self.logger.info(f"   Model Accuracy: {accuracy:.4f}")
         self.logger.info(f"   CV Accuracy: {cv_accuracy:.4f}")
         self.logger.info(f"   Required Threshold: {self.config.ACCURACY_THRESHOLD:.4f}")
         self.logger.info(f"   Minimum Threshold: {self.config.MINIMUM_ACCURACY:.4f}")
         
         if accuracy >= self.config.ACCURACY_THRESHOLD:
-            reason = f"✅ Model accuracy ({accuracy:.4f}) meets deployment threshold ({self.config.ACCURACY_THRESHOLD:.4f})"
+            reason = f" Model accuracy ({accuracy:.4f}) meets deployment threshold ({self.config.ACCURACY_THRESHOLD:.4f})"
             self.logger.info(reason)
             return True, reason
             
         elif accuracy >= self.config.MINIMUM_ACCURACY:
-            reason = f"⚠️ Model accuracy ({accuracy:.4f}) meets minimum threshold ({self.config.MINIMUM_ACCURACY:.4f}) but below optimal ({self.config.ACCURACY_THRESHOLD:.4f})"
+            reason = f" Model accuracy ({accuracy:.4f}) meets minimum threshold ({self.config.MINIMUM_ACCURACY:.4f}) but below optimal ({self.config.ACCURACY_THRESHOLD:.4f})"
             self.logger.warning(reason)
             return False, reason
             
         else:
-            reason = f"❌ Model accuracy ({accuracy:.4f}) below minimum threshold ({self.config.MINIMUM_ACCURACY:.4f})"
+            reason = f" Model accuracy ({accuracy:.4f}) below minimum threshold ({self.config.MINIMUM_ACCURACY:.4f})"
             self.logger.error(reason)
             return False, reason
     
@@ -322,7 +322,7 @@ if __name__ == "__main__":
         pipeline_start_time = time.time()
         
         try:
-            self.logger.info("🚀 Starting Enterprise MLOps Training Pipeline")
+            self.logger.info(" Starting Enterprise MLOps Training Pipeline")
             
             # Step 1: Prepare data
             X_train, X_test, y_train, y_test = self.prepare_data()
@@ -339,10 +339,10 @@ if __name__ == "__main__":
             # Step 5: Train SageMaker model if deployment criteria met
             sagemaker_training_job = None
             if should_deploy and self.config.AUTO_DEPLOY_ENABLED:
-                self.logger.info("🎯 Model meets criteria, starting SageMaker training")
+                self.logger.info(" Model meets criteria, starting SageMaker training")
                 sagemaker_training_job = self.train_sagemaker_model(role_arn)
             else:
-                self.logger.info("⏸️ Skipping SageMaker training - deployment criteria not met or auto-deploy disabled")
+                self.logger.info("⏸ Skipping SageMaker training - deployment criteria not met or auto-deploy disabled")
             
             pipeline_duration = time.time() - pipeline_start_time
             
@@ -365,7 +365,7 @@ if __name__ == "__main__":
             else:
                 self.notification_manager.send_failure_notification(pipeline_results)
             
-            self.logger.info(f"✅ Training pipeline completed in {pipeline_duration:.2f} seconds")
+            self.logger.info(f" Training pipeline completed in {pipeline_duration:.2f} seconds")
             
             return pipeline_results
             
@@ -378,7 +378,7 @@ if __name__ == "__main__":
                 'pipeline_timestamp': datetime.now().isoformat()
             }
             
-            self.logger.error(f"❌ Training pipeline failed: {str(e)}")
+            self.logger.error(f" Training pipeline failed: {str(e)}")
             self.notification_manager.send_error_notification(error_results)
             
             raise

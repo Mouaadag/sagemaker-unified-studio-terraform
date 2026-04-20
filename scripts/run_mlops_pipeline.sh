@@ -26,7 +26,7 @@ NC='\033[0m' # No Color
 # Help function
 show_help() {
     cat << EOF
-🚀 MLOps Pipeline Runner
+ MLOps Pipeline Runner
 
 Usage: $0 [OPTIONS]
 
@@ -123,7 +123,7 @@ while [[ $# -gt 0 ]]; do
             exit 0
             ;;
         *)
-            echo -e "${RED}❌ Unknown option: $1${NC}"
+            echo -e "${RED} Unknown option: $1${NC}"
             show_help
             exit 1
             ;;
@@ -132,27 +132,27 @@ done
 
 # Validate required arguments
 if [[ -z "$ROLE_ARN" && "$MODE" != "testing" ]]; then
-    echo -e "${RED}❌ Error: --role-arn is required for training and deployment modes${NC}"
+    echo -e "${RED} Error: --role-arn is required for training and deployment modes${NC}"
     show_help
     exit 1
 fi
 
 # Check if we're in the right directory
 if [[ ! -f "run_pipeline.py" ]]; then
-    echo -e "${RED}❌ Error: run_pipeline.py not found. Please run this script from the project root directory.${NC}"
+    echo -e "${RED} Error: run_pipeline.py not found. Please run this script from the project root directory.${NC}"
     exit 1
 fi
 
 # Check if pipeline module exists
 if [[ ! -d "pipeline" ]]; then
-    echo -e "${RED}❌ Error: pipeline directory not found. Please run this script from the project root directory.${NC}"
+    echo -e "${RED} Error: pipeline directory not found. Please run this script from the project root directory.${NC}"
     exit 1
 fi
 
 # Set environment variables
 export AWS_REGION="${REGION}"
 
-echo -e "${BLUE}🚀 MLOps Pipeline Runner${NC}"
+echo -e "${BLUE} MLOps Pipeline Runner${NC}"
 echo "=================================="
 echo "Mode: $MODE"
 echo "Region: $REGION"
@@ -165,7 +165,7 @@ echo "Region: $REGION"
 echo "=================================="
 
 # Check Python dependencies
-echo -e "${BLUE}🔍 Checking dependencies...${NC}"
+echo -e "${BLUE} Checking dependencies...${NC}"
 python3 -c "
 import sys
 required_packages = ['boto3', 'sagemaker', 'sklearn', 'numpy', 'pandas']
@@ -178,26 +178,26 @@ for package in required_packages:
         missing_packages.append(package)
 
 if missing_packages:
-    print(f'❌ Missing packages: {missing_packages}')
+    print(f' Missing packages: {missing_packages}')
     print('Install with: pip install boto3 sagemaker scikit-learn numpy pandas')
     sys.exit(1)
 else:
-    print('✅ All dependencies satisfied')
+    print(' All dependencies satisfied')
 "
 
 if [[ $? -ne 0 ]]; then
-    echo -e "${RED}❌ Dependency check failed${NC}"
+    echo -e "${RED} Dependency check failed${NC}"
     exit 1
 fi
 
 # Check AWS credentials
-echo -e "${BLUE}🔐 Checking AWS credentials...${NC}"
+echo -e "${BLUE} Checking AWS credentials...${NC}"
 aws sts get-caller-identity > /dev/null 2>&1
 if [[ $? -ne 0 ]]; then
-    echo -e "${RED}❌ AWS credentials not configured. Please run 'aws configure' first.${NC}"
+    echo -e "${RED} AWS credentials not configured. Please run 'aws configure' first.${NC}"
     exit 1
 else
-    echo -e "${GREEN}✅ AWS credentials verified${NC}"
+    echo -e "${GREEN} AWS credentials verified${NC}"
 fi
 
 # Build Python command
@@ -213,7 +213,7 @@ PYTHON_CMD="python3 run_pipeline.py --mode $MODE"
 [[ "$VERBOSE" == "true" ]] && PYTHON_CMD="$PYTHON_CMD --verbose"
 
 # Execute the pipeline
-echo -e "${BLUE}🎯 Starting pipeline execution...${NC}"
+echo -e "${BLUE} Starting pipeline execution...${NC}"
 echo "Command: $PYTHON_CMD"
 echo ""
 
@@ -222,11 +222,11 @@ EXIT_CODE=$?
 
 if [[ $EXIT_CODE -eq 0 ]]; then
     echo ""
-    echo -e "${GREEN}🎉 Pipeline completed successfully!${NC}"
+    echo -e "${GREEN} Pipeline completed successfully!${NC}"
     
     # Show quick access commands if applicable
     if [[ -n "$OUTPUT_FILE" && -f "$OUTPUT_FILE" ]]; then
-        echo -e "${BLUE}📄 Results saved to: $OUTPUT_FILE${NC}"
+        echo -e "${BLUE} Results saved to: $OUTPUT_FILE${NC}"
         echo "View results: cat $OUTPUT_FILE | jq"
     fi
     
@@ -234,21 +234,21 @@ if [[ $EXIT_CODE -eq 0 ]]; then
     if [[ "$MODE" == "complete" || "$MODE" == "deployment" ]] && [[ -n "$OUTPUT_FILE" ]]; then
         ENDPOINT=$(cat "$OUTPUT_FILE" 2>/dev/null | jq -r '.deployment.deployment_results.endpoint_name // empty' 2>/dev/null || echo "")
         if [[ -n "$ENDPOINT" && "$ENDPOINT" != "null" ]]; then
-            echo -e "${BLUE}🧪 Test your endpoint:${NC}"
+            echo -e "${BLUE} Test your endpoint:${NC}"
             echo "python3 scripts/test_endpoint.py --endpoint-name $ENDPOINT"
         fi
     fi
     
 else
     echo ""
-    echo -e "${RED}❌ Pipeline failed with exit code: $EXIT_CODE${NC}"
+    echo -e "${RED} Pipeline failed with exit code: $EXIT_CODE${NC}"
     
     if [[ -n "$OUTPUT_FILE" && -f "$OUTPUT_FILE" ]]; then
-        echo -e "${YELLOW}📄 Error details saved to: $OUTPUT_FILE${NC}"
+        echo -e "${YELLOW} Error details saved to: $OUTPUT_FILE${NC}"
         echo "View errors: cat $OUTPUT_FILE | jq"
     fi
     
-    echo -e "${YELLOW}💡 Troubleshooting tips:${NC}"
+    echo -e "${YELLOW} Troubleshooting tips:${NC}"
     echo "  • Check AWS permissions and quotas"
     echo "  • Verify SageMaker role has necessary policies"
     echo "  • Check CloudWatch logs for detailed errors"

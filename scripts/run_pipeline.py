@@ -62,10 +62,10 @@ def main():
     try:
         config.validate()
     except ValueError as e:
-        print(f"❌ Configuration error: {e}")
+        print(f" Configuration error: {e}")
         sys.exit(1)
     
-    print("🚀 Starting MLOps Pipeline")
+    print(" Starting MLOps Pipeline")
     print("=" * 60)
     print(f"Mode: {args.mode}")
     print(f"Role ARN: {args.role_arn}")
@@ -79,22 +79,22 @@ def main():
     
     try:
         if args.mode in ['complete', 'training']:
-            print("\n🎯 Starting Training Phase...")
+            print("\n Starting Training Phase...")
             trainer = TrainingPipeline(config)
             train_results = trainer.run_training_pipeline(args.role_arn)
             results['training'] = train_results
             
-            print(f"\n📊 Training Results:")
+            print(f"\n Training Results:")
             print(f"   Status: {train_results['pipeline_status']}")
             print(f"   Accuracy: {train_results['evaluation_results']['accuracy']:.4f}")
             print(f"   Should Deploy: {train_results['should_deploy']}")
             print(f"   Duration: {train_results['pipeline_duration']:.2f}s")
             
             if args.mode == 'training':
-                print("\n✅ Training phase completed")
+                print("\n Training phase completed")
                 
         if args.mode in ['complete', 'deployment']:
-            print("\n🚀 Starting Deployment Phase...")
+            print("\n Starting Deployment Phase...")
             deployer = DeploymentPipeline(config)
             
             if args.mode == 'deployment' and args.training_job:
@@ -104,12 +104,12 @@ def main():
             elif args.mode == 'deployment':
                 deploy_results = deployer.run_deployment_pipeline()
             else:
-                print("⏸️ Skipping deployment - criteria not met or not applicable")
+                print("⏸ Skipping deployment - criteria not met or not applicable")
                 deploy_results = {'pipeline_status': 'skipped', 'reason': 'deployment criteria not met'}
             
             results['deployment'] = deploy_results
             
-            print(f"\n📦 Deployment Results:")
+            print(f"\n Deployment Results:")
             print(f"   Status: {deploy_results['pipeline_status']}")
             if deploy_results.get('deployment_results'):
                 endpoint_name = deploy_results['deployment_results']['endpoint_name']
@@ -117,10 +117,10 @@ def main():
                 print(f"   Duration: {deploy_results['deployment_results']['deployment_duration']:.2f}s")
             
             if args.mode == 'deployment':
-                print("\n✅ Deployment phase completed")
+                print("\n Deployment phase completed")
                 
         if args.mode in ['complete', 'testing']:
-            print("\n🧪 Starting Testing Phase...")
+            print("\n Starting Testing Phase...")
             tester = TestingPipeline(config)
             
             # Determine endpoint name
@@ -149,18 +149,18 @@ def main():
                 test_results = tester.run_comprehensive_tests(endpoint_name)
                 results['testing'] = test_results
                 
-                print(f"\n🔬 Testing Results:")
+                print(f"\n Testing Results:")
                 print(f"   Overall Status: {test_results['overall_status']}")
                 print(f"   Health: {test_results['health_results']['status']}")
                 print(f"   Accuracy: {test_results['prediction_results']['accuracy']:.2%}")
                 print(f"   Avg Latency: {test_results['performance_results']['avg_latency_ms']:.2f}ms")
                 print(f"   Success Rate: {test_results['performance_results']['success_rate']:.2%}")
             else:
-                print("⚠️ No endpoint available for testing")
+                print(" No endpoint available for testing")
                 results['testing'] = {'status': 'skipped', 'reason': 'no endpoint available'}
             
             if args.mode == 'testing':
-                print("\n✅ Testing phase completed")
+                print("\n Testing phase completed")
         
         pipeline_duration = time.time() - pipeline_start_time
         
@@ -174,7 +174,7 @@ def main():
         }
         
         print("\n" + "=" * 60)
-        print("🎉 PIPELINE COMPLETED SUCCESSFULLY")
+        print(" PIPELINE COMPLETED SUCCESSFULLY")
         print("=" * 60)
         print(f"Total Duration: {pipeline_duration:.2f} seconds")
         
@@ -191,7 +191,7 @@ def main():
         if args.output_file:
             with open(args.output_file, 'w') as f:
                 json.dump(results, f, indent=2, default=str)
-            print(f"\n📄 Results saved to: {args.output_file}")
+            print(f"\n Results saved to: {args.output_file}")
         
         return 0
         
@@ -209,7 +209,7 @@ def main():
         }
         
         print("\n" + "=" * 60)
-        print("❌ PIPELINE FAILED")
+        print(" PIPELINE FAILED")
         print("=" * 60)
         print(f"Error: {str(e)}")
         print(f"Duration: {pipeline_duration:.2f} seconds")
@@ -217,7 +217,7 @@ def main():
         if args.output_file:
             with open(args.output_file, 'w') as f:
                 json.dump(error_results, f, indent=2, default=str)
-            print(f"\n📄 Error details saved to: {args.output_file}")
+            print(f"\n Error details saved to: {args.output_file}")
         
         return 1
 

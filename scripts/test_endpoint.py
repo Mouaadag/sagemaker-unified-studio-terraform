@@ -21,9 +21,9 @@ def test_endpoint(endpoint_name: str, region: str = 'us-east-1') -> None:
     # Initialize SageMaker runtime client
     try:
         runtime = boto3.client('sagemaker-runtime', region_name=region)
-        print("✅ Successfully connected to SageMaker runtime")
+        print(" Successfully connected to SageMaker runtime")
     except Exception as e:
-        print(f"❌ Failed to connect to SageMaker runtime: {e}")
+        print(f" Failed to connect to SageMaker runtime: {e}")
         return
     
     # Test cases for iris dataset
@@ -75,10 +75,10 @@ def test_endpoint(endpoint_name: str, region: str = 'us-east-1') -> None:
             predictions = result.get('predictions', [])
             probabilities = result.get('probabilities', {})
             
-            print(f"✅ Predictions: {predictions}")
+            print(f" Predictions: {predictions}")
             
             if probabilities:
-                print("📊 Probabilities:")
+                print(" Probabilities:")
                 for class_name, probs in probabilities.items():
                     if isinstance(probs, list) and len(probs) > 0:
                         print(f"   {class_name}: {probs[0]:.4f}")
@@ -86,12 +86,12 @@ def test_endpoint(endpoint_name: str, region: str = 'us-east-1') -> None:
             # Check if prediction matches expected (for single predictions)
             if len(predictions) == 1 and isinstance(test_case['expected'], str):
                 if predictions[0] == test_case['expected']:
-                    print(f"✅ Correct prediction!")
+                    print(f" Correct prediction!")
                 else:
-                    print(f"⚠️  Expected {test_case['expected']}, got {predictions[0]}")
+                    print(f"  Expected {test_case['expected']}, got {predictions[0]}")
             
         except Exception as e:
-            print(f"❌ Test failed: {e}")
+            print(f" Test failed: {e}")
             continue
     
     print("\n" + "="*60)
@@ -112,12 +112,12 @@ def test_endpoint(endpoint_name: str, region: str = 'us-east-1') -> None:
         print(f"Current Weight: {current_weight}")
         
         if status == 'InService':
-            print("✅ Endpoint is healthy and ready for production!")
+            print(" Endpoint is healthy and ready for production!")
         else:
-            print(f"⚠️  Endpoint status is {status}")
+            print(f"  Endpoint status is {status}")
             
     except Exception as e:
-        print(f"❌ Failed to get endpoint status: {e}")
+        print(f" Failed to get endpoint status: {e}")
 
 def main():
     """Main function to run endpoint tests."""
@@ -127,7 +127,7 @@ def main():
     
     args = parser.parse_args()
     
-    print("🧪 SageMaker Endpoint Test Suite")
+    print(" SageMaker Endpoint Test Suite")
     print("="*60)
     
     test_endpoint(args.endpoint_name, args.region)

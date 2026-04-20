@@ -63,10 +63,10 @@ class NotificationManager:
                 Subject=subject,
                 Message=message
             )
-            self.logger.info(f"✅ SNS notification sent: {subject}")
+            self.logger.info(f" SNS notification sent: {subject}")
             return True
         except Exception as e:
-            self.logger.error(f"❌ Failed to send SNS notification: {e}")
+            self.logger.error(f" Failed to send SNS notification: {e}")
             return False
     
     def _send_slack_notification(self, message: Dict[str, Any]) -> bool:
@@ -84,14 +84,14 @@ class NotificationManager:
             
             with urllib.request.urlopen(req) as response:
                 if response.getcode() == 200:
-                    self.logger.info("✅ Slack notification sent")
+                    self.logger.info(" Slack notification sent")
                     return True
                 else:
-                    self.logger.error(f"❌ Slack notification failed: {response.getcode()}")
+                    self.logger.error(f" Slack notification failed: {response.getcode()}")
                     return False
                     
         except Exception as e:
-            self.logger.error(f"❌ Failed to send Slack notification: {e}")
+            self.logger.error(f" Failed to send Slack notification: {e}")
             return False
     
     def send_success_notification(self, pipeline_results: Dict[str, Any]) -> None:
@@ -101,23 +101,23 @@ class NotificationManager:
         should_deploy = pipeline_results.get('should_deploy', False)
         
         # SNS notification
-        subject = f"🎉 MLOps Training Success - {self._format_accuracy(accuracy)} Accuracy"
+        subject = f" MLOps Training Success - {self._format_accuracy(accuracy)} Accuracy"
         
         sns_message = f"""
 MLOps Training Pipeline Completed Successfully
 
-📊 Model Performance:
+ Model Performance:
 • Accuracy: {self._format_accuracy(accuracy)}
 • CV Accuracy: {self._format_accuracy(evaluation.get('cv_mean_accuracy', 0.0))}
 • Threshold: {self._format_accuracy(self.config.ACCURACY_THRESHOLD)}
 
-🚀 Deployment Decision:
-• Deploy Recommended: {"✅ YES" if should_deploy else "❌ NO"}
+ Deployment Decision:
+• Deploy Recommended: {" YES" if should_deploy else " NO"}
 • Reason: {pipeline_results.get('deployment_reason', 'Unknown')}
 
-⏱️ Pipeline Duration: {pipeline_results.get('pipeline_duration', 0):.2f} seconds
-🏷️ Training Job: {pipeline_results.get('sagemaker_training_job', 'Local only')}
-📅 Timestamp: {pipeline_results.get('pipeline_timestamp')}
+⏱ Pipeline Duration: {pipeline_results.get('pipeline_duration', 0):.2f} seconds
+ Training Job: {pipeline_results.get('sagemaker_training_job', 'Local only')}
+ Timestamp: {pipeline_results.get('pipeline_timestamp')}
 
 Next Steps:
 {f"• Model is ready for deployment" if should_deploy else "• Review model performance and retrain if needed"}
@@ -133,7 +133,7 @@ Next Steps:
             "attachments": [
                 {
                     "color": color,
-                    "title": f"🎉 MLOps Training Complete - {self._format_accuracy(accuracy)} Accuracy",
+                    "title": f" MLOps Training Complete - {self._format_accuracy(accuracy)} Accuracy",
                     "fields": [
                         {
                             "title": "Model Accuracy",
@@ -142,7 +142,7 @@ Next Steps:
                         },
                         {
                             "title": "Deploy Ready",
-                            "value": "✅ YES" if should_deploy else "❌ NO",
+                            "value": " YES" if should_deploy else " NO",
                             "short": True
                         },
                         {
@@ -159,7 +159,7 @@ Next Steps:
         
         self._send_slack_notification(slack_message)
         
-        self.logger.info(f"📢 Training success notifications sent")
+        self.logger.info(f" Training success notifications sent")
     
     def send_failure_notification(self, pipeline_results: Dict[str, Any]) -> None:
         """Send notification for training that doesn't meet deployment criteria"""
@@ -167,21 +167,21 @@ Next Steps:
         accuracy = evaluation.get('accuracy', 0.0)
         
         # SNS notification
-        subject = f"⚠️ MLOps Training - Low Accuracy {self._format_accuracy(accuracy)}"
+        subject = f" MLOps Training - Low Accuracy {self._format_accuracy(accuracy)}"
         
         sns_message = f"""
 MLOps Training Pipeline - Model Below Deployment Threshold
 
-📊 Model Performance:
+ Model Performance:
 • Accuracy: {self._format_accuracy(accuracy)}
 • Required Threshold: {self._format_accuracy(self.config.ACCURACY_THRESHOLD)}
 • Minimum Threshold: {self._format_accuracy(self.config.MINIMUM_ACCURACY)}
 
-❌ Deployment Decision: NOT RECOMMENDED
+ Deployment Decision: NOT RECOMMENDED
 • Reason: {pipeline_results.get('deployment_reason', 'Below accuracy threshold')}
 
-⏱️ Pipeline Duration: {pipeline_results.get('pipeline_duration', 0):.2f} seconds
-📅 Timestamp: {pipeline_results.get('pipeline_timestamp')}
+⏱ Pipeline Duration: {pipeline_results.get('pipeline_duration', 0):.2f} seconds
+ Timestamp: {pipeline_results.get('pipeline_timestamp')}
 
 Recommended Actions:
 • Review model hyperparameters
@@ -198,7 +198,7 @@ Recommended Actions:
             "attachments": [
                 {
                     "color": "danger",
-                    "title": f"⚠️ MLOps Training - Low Accuracy {self._format_accuracy(accuracy)}",
+                    "title": f" MLOps Training - Low Accuracy {self._format_accuracy(accuracy)}",
                     "fields": [
                         {
                             "title": "Model Accuracy",
@@ -224,7 +224,7 @@ Recommended Actions:
         
         self._send_slack_notification(slack_message)
         
-        self.logger.info(f"📢 Training failure notifications sent")
+        self.logger.info(f" Training failure notifications sent")
     
     def send_deployment_success_notification(self, deployment_results: Dict[str, Any]) -> None:
         """Send notification for successful deployment"""
@@ -232,21 +232,21 @@ Recommended Actions:
         duration = deployment_results.get('deployment_duration', 0)
         
         # SNS notification
-        subject = f"🚀 MLOps Deployment Success - {endpoint_name}"
+        subject = f" MLOps Deployment Success - {endpoint_name}"
         
         sns_message = f"""
 Model Deployment Completed Successfully
 
-🎯 Endpoint Details:
+ Endpoint Details:
 • Endpoint Name: {endpoint_name}
 • Status: InService
 • Deployment Duration: {duration:.2f} seconds
 
-🧪 Health Check:
+ Health Check:
 • Status: {deployment_results.get('test_results', {}).get('status', 'Unknown')}
 • Latency: {deployment_results.get('test_results', {}).get('test_duration_ms', 0):.2f}ms
 
-📅 Deployment Time: {deployment_results.get('metadata', {}).get('deployment_timestamp')}
+ Deployment Time: {deployment_results.get('metadata', {}).get('deployment_timestamp')}
 
 The model is now ready for production use!
 """
@@ -258,7 +258,7 @@ The model is now ready for production use!
             "attachments": [
                 {
                     "color": "good",
-                    "title": f"🚀 Deployment Success",
+                    "title": f" Deployment Success",
                     "fields": [
                         {
                             "title": "Endpoint",
@@ -272,7 +272,7 @@ The model is now ready for production use!
                         },
                         {
                             "title": "Status",
-                            "value": "✅ InService",
+                            "value": " InService",
                             "short": True
                         }
                     ],
@@ -284,7 +284,7 @@ The model is now ready for production use!
         
         self._send_slack_notification(slack_message)
         
-        self.logger.info(f"📢 Deployment success notifications sent")
+        self.logger.info(f" Deployment success notifications sent")
     
     def send_deployment_failure_notification(self, deployment_results: Dict[str, Any]) -> None:
         """Send notification for failed deployment"""
@@ -292,17 +292,17 @@ The model is now ready for production use!
         duration = deployment_results.get('deployment_duration', 0)
         
         # SNS notification
-        subject = f"❌ MLOps Deployment Failed"
+        subject = f" MLOps Deployment Failed"
         
         sns_message = f"""
 Model Deployment Failed
 
-❌ Error Details:
+ Error Details:
 • Error: {error}
 • Duration: {duration:.2f} seconds
 • Attempted Endpoint: {deployment_results.get('attempted_endpoint', 'Unknown')}
 
-🔄 Rollback Status:
+ Rollback Status:
 {f"• Rollback: {deployment_results.get('rollback_results', {}).get('status', 'Not attempted')}" if deployment_results.get('rollback_results') else "• Rollback: Not configured"}
 
 Action Required:
@@ -319,7 +319,7 @@ Action Required:
             "attachments": [
                 {
                     "color": "danger",
-                    "title": "❌ Deployment Failed",
+                    "title": " Deployment Failed",
                     "fields": [
                         {
                             "title": "Error",
@@ -345,7 +345,7 @@ Action Required:
         
         self._send_slack_notification(slack_message)
         
-        self.logger.info(f"📢 Deployment failure notifications sent")
+        self.logger.info(f" Deployment failure notifications sent")
     
     def send_deployment_skipped_notification(self, skip_info: Dict[str, Any]) -> None:
         """Send notification when deployment is skipped"""
@@ -355,17 +355,17 @@ Action Required:
         accuracy = evaluation.get('accuracy', 0.0)
         
         # SNS notification
-        subject = f"⏸️ MLOps Deployment Skipped - {training_job}"
+        subject = f"⏸ MLOps Deployment Skipped - {training_job}"
         
         sns_message = f"""
 Model Deployment Skipped
 
-📊 Model Details:
+ Model Details:
 • Training Job: {training_job}
 • Accuracy: {self._format_accuracy(accuracy)}
 • Required: {self._format_accuracy(self.config.ACCURACY_THRESHOLD)}
 
-⏸️ Skip Reason: {reason}
+⏸ Skip Reason: {reason}
 
 To deploy this model:
 • Enable auto-deploy in configuration
@@ -380,7 +380,7 @@ To deploy this model:
             "attachments": [
                 {
                     "color": "warning",
-                    "title": "⏸️ Deployment Skipped",
+                    "title": "⏸ Deployment Skipped",
                     "fields": [
                         {
                             "title": "Training Job",
@@ -406,7 +406,7 @@ To deploy this model:
         
         self._send_slack_notification(slack_message)
         
-        self.logger.info(f"📢 Deployment skipped notifications sent")
+        self.logger.info(f" Deployment skipped notifications sent")
     
     def send_error_notification(self, error_results: Dict[str, Any]) -> None:
         """Send notification for pipeline errors"""
@@ -414,12 +414,12 @@ To deploy this model:
         duration = error_results.get('pipeline_duration', 0)
         
         # SNS notification
-        subject = f"🚨 MLOps Pipeline Error"
+        subject = f" MLOps Pipeline Error"
         
         sns_message = f"""
 MLOps Pipeline Encountered an Error
 
-🚨 Error Details:
+ Error Details:
 • Error: {error}
 • Duration: {duration:.2f} seconds
 • Timestamp: {error_results.get('pipeline_timestamp')}
@@ -438,7 +438,7 @@ Action Required:
             "attachments": [
                 {
                     "color": "danger",
-                    "title": "🚨 Pipeline Error",
+                    "title": " Pipeline Error",
                     "fields": [
                         {
                             "title": "Error",
@@ -452,7 +452,7 @@ Action Required:
                         },
                         {
                             "title": "Status",
-                            "value": "❌ Failed",
+                            "value": " Failed",
                             "short": True
                         }
                     ],
@@ -464,4 +464,4 @@ Action Required:
         
         self._send_slack_notification(slack_message)
         
-        self.logger.error(f"📢 Pipeline error notifications sent")
+        self.logger.error(f" Pipeline error notifications sent")

@@ -1,10 +1,10 @@
-# 🚀 Enterprise MLOps Pipeline
+#  Enterprise MLOps Pipeline
 
 ## Overview
 
 This is a **production-grade MLOps pipeline** that implements conditional deployment based on model accuracy thresholds. The pipeline follows enterprise best practices with comprehensive testing, monitoring, notifications, and rollback capabilities.
 
-## 🏗️ Architecture
+##  Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
@@ -24,33 +24,33 @@ This is a **production-grade MLOps pipeline** that implements conditional deploy
 └─────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-## 🎯 Key Features
+##  Key Features
 
-### ✅ **Conditional Deployment**
+###  **Conditional Deployment**
 - **Accuracy Threshold**: Model must meet configurable accuracy threshold (default: 95%)
 - **Minimum Threshold**: Safety net for minimum acceptable accuracy (default: 90%)
 - **Auto-Deploy**: Automatic deployment when criteria are met
 - **Manual Override**: Option to disable auto-deployment
 
-### 🔄 **Production-Grade Reliability**
+###  **Production-Grade Reliability**
 - **Rollback Capability**: Automatic rollback to previous endpoint on failure
 - **Comprehensive Testing**: Health checks, accuracy validation, performance testing
 - **Error Handling**: Robust error handling with detailed logging
 - **State Management**: Tracks pipeline state and deployment history
 
-### 📊 **Enterprise Monitoring**
+###  **Enterprise Monitoring**
 - **Multi-Channel Notifications**: SNS, Slack, Email support
 - **Detailed Logging**: Structured logging with multiple levels
 - **Metrics Tracking**: Performance metrics, latency, throughput
 - **Audit Trail**: Complete pipeline execution history
 
-### 🛠️ **Developer Experience**
+###  **Developer Experience**
 - **Simple Interface**: Easy-to-use command-line interface
 - **Configuration Management**: JSON-based configuration with environment overrides
 - **Modular Design**: Separate components for training, deployment, testing
 - **CI/CD Ready**: Designed for GitLab CI/CD integration
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 pipeline/
@@ -68,7 +68,7 @@ requirements.txt             # Python dependencies
 README.md                    # This file
 ```
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Prerequisites
 
@@ -113,7 +113,7 @@ python3 run_pipeline.py \
   --output-file results.json
 ```
 
-## ⚙️ Configuration
+##  Configuration
 
 ### Environment Variables
 
@@ -145,7 +145,7 @@ export LOG_LEVEL=INFO                  # Logging level
 }
 ```
 
-## 📊 Usage Examples
+##  Usage Examples
 
 ### 1. Full Pipeline with Notifications
 
@@ -195,7 +195,7 @@ export SLACK_WEBHOOK_URL="https://hooks.slack.com/services/..."
   --accuracy 0.92
 ```
 
-## 🔄 CI/CD Integration
+##  CI/CD Integration
 
 ### GitLab CI/CD Example
 
@@ -240,29 +240,29 @@ deploy_production:
     - main
 ```
 
-## 📈 Pipeline Outputs
+##  Pipeline Outputs
 
 ### Success Output Example
 
 ```
-🎉 ENTERPRISE MLOPS PIPELINE COMPLETED
+ ENTERPRISE MLOPS PIPELINE COMPLETED
 ================================================================================
 Status: SUCCESS
 Duration: 245.67 seconds
 Training Accuracy: 97.33%
-Deployment Occurred: ✅ Yes
+Deployment Occurred:  Yes
 Endpoint: iris-model-20250823-143022
-Testing: ✅ Passed
+Testing:  Passed
 ================================================================================
 
-📊 Key Metrics:
+ Key Metrics:
    Status: success
    Training Accuracy: 97.33%
-   Deployment: ✅ Yes
+   Deployment:  Yes
    Endpoint: iris-model-20250823-143022
-   Testing: ✅ Passed
+   Testing:  Passed
 
-📄 Detailed results saved to: /tmp/mlops_pipeline_results_20250823_143000.json
+ Detailed results saved to: /tmp/mlops_pipeline_results_20250823_143000.json
 ```
 
 ### Results JSON Structure
@@ -307,7 +307,7 @@ Testing: ✅ Passed
 }
 ```
 
-## 🔧 Troubleshooting
+##  Troubleshooting
 
 ### Common Issues
 
@@ -322,7 +322,7 @@ aws iam attach-role-policy \
 
 #### 2. Low Accuracy (No Deployment)
 ```
-⚠️ Model accuracy (87.33%) below minimum threshold (90.00%)
+ Model accuracy (87.33%) below minimum threshold (90.00%)
 ```
 **Solutions:**
 - Adjust hyperparameters
@@ -332,7 +332,7 @@ aws iam attach-role-policy \
 
 #### 3. Endpoint Health Check Failure
 ```
-❌ Endpoint test failed: Could not invoke endpoint
+ Endpoint test failed: Could not invoke endpoint
 ```
 **Solutions:**
 - Check inference script
@@ -361,7 +361,7 @@ pip install boto3 sagemaker scikit-learn numpy pandas
 tail -f /tmp/mlops_pipeline_*.log
 ```
 
-## 🔔 Notifications
+##  Notifications
 
 ### SNS Setup
 
@@ -384,7 +384,7 @@ aws sns subscribe \
    export SLACK_WEBHOOK_URL="https://hooks.slack.com/services/..."
    ```
 
-## 🧹 Cleanup
+##  Cleanup
 
 ### Manual Cleanup
 
@@ -428,7 +428,7 @@ chmod +x cleanup_endpoints.sh
 ./cleanup_endpoints.sh
 ```
 
-## 📚 Advanced Usage
+##  Advanced Usage
 
 ### Custom Training Script
 
@@ -464,7 +464,7 @@ def custom_evaluation(model, X_test, y_test):
     return custom_metrics
 ```
 
-## 🤝 Contributing
+##  Contributing
 
 1. Fork the repository
 2. Create a feature branch
@@ -472,7 +472,7 @@ def custom_evaluation(model, X_test, y_test):
 4. Ensure all tests pass
 5. Submit a pull request
 
-## 📄 License
+##  License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
@@ -484,4 +484,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-**This is exactly what a senior MLOps engineer would build for production-grade ML deployments.** 🚀
+**This is exactly what a senior MLOps engineer would build for production-grade ML deployments.** 

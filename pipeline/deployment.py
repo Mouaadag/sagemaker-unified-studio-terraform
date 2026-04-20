@@ -52,7 +52,7 @@ class DeploymentPipeline:
     
     def get_latest_training_job(self) -> Optional[str]:
         """Find the most recent completed training job"""
-        self.logger.info("🔍 Searching for latest completed training job")
+        self.logger.info(" Searching for latest completed training job")
         
         try:
             response = self.sagemaker_client.list_training_jobs(
@@ -65,20 +65,20 @@ class DeploymentPipeline:
             for job in response['TrainingJobs']:
                 if (job['TrainingJobStatus'] == 'Completed' and 
                     self.config.MODEL_NAME_PREFIX in job['TrainingJobName']):
-                    self.logger.info(f"✅ Found training job: {job['TrainingJobName']}")
+                    self.logger.info(f" Found training job: {job['TrainingJobName']}")
                     return job['TrainingJobName']
             
             # Fallback to any completed job
             for job in response['TrainingJobs']:
                 if job['TrainingJobStatus'] == 'Completed':
-                    self.logger.warning(f"⚠️ Using fallback training job: {job['TrainingJobName']}")
+                    self.logger.warning(f" Using fallback training job: {job['TrainingJobName']}")
                     return job['TrainingJobName']
             
-            self.logger.error("❌ No completed training jobs found")
+            self.logger.error(" No completed training jobs found")
             return None
             
         except Exception as e:
-            self.logger.error(f"❌ Error finding training job: {str(e)}")
+            self.logger.error(f" Error finding training job: {str(e)}")
             return None
     
     def check_deployment_criteria(self, training_job_name: str) -> Tuple[bool, Dict[str, Any]]:
@@ -91,7 +91,7 @@ class DeploymentPipeline:
         Returns:
             Tuple of (should_deploy: bool, evaluation_metrics: dict)
         """
-        self.logger.info(f"📊 Checking deployment criteria for {training_job_name}")
+        self.logger.info(f" Checking deployment criteria for {training_job_name}")
         
         try:
             # Get training job details
@@ -116,17 +116,17 @@ class DeploymentPipeline:
             }
             
             if accuracy >= self.config.ACCURACY_THRESHOLD:
-                self.logger.info(f"✅ Model accuracy ({accuracy:.4f}) meets deployment threshold ({self.config.ACCURACY_THRESHOLD:.4f})")
+                self.logger.info(f" Model accuracy ({accuracy:.4f}) meets deployment threshold ({self.config.ACCURACY_THRESHOLD:.4f})")
                 return True, evaluation_results
             elif accuracy >= self.config.MINIMUM_ACCURACY:
-                self.logger.warning(f"⚠️ Model accuracy ({accuracy:.4f}) meets minimum but below optimal threshold")
+                self.logger.warning(f" Model accuracy ({accuracy:.4f}) meets minimum but below optimal threshold")
                 return False, evaluation_results
             else:
-                self.logger.error(f"❌ Model accuracy ({accuracy:.4f}) below minimum threshold ({self.config.MINIMUM_ACCURACY:.4f})")
+                self.logger.error(f" Model accuracy ({accuracy:.4f}) below minimum threshold ({self.config.MINIMUM_ACCURACY:.4f})")
                 return False, evaluation_results
                 
         except Exception as e:
-            self.logger.error(f"❌ Error checking deployment criteria: {str(e)}")
+            self.logger.error(f" Error checking deployment criteria: {str(e)}")
             evaluation_results = {
                 'training_job_name': training_job_name,
                 'error': str(e),
@@ -146,13 +146,13 @@ class DeploymentPipeline:
             for endpoint in endpoints['Endpoints']:
                 if (endpoint['EndpointStatus'] == 'InService' and 
                     self.config.ENDPOINT_PREFIX in endpoint['EndpointName']):
-                    self.logger.info(f"🎯 Found current production endpoint: {endpoint['EndpointName']}")
+                    self.logger.info(f" Found current production endpoint: {endpoint['EndpointName']}")
                     return endpoint['EndpointName']
                     
             return None
             
         except Exception as e:
-            self.logger.warning(f"⚠️ Error finding current endpoint: {str(e)}")
+            self.logger.warning(f" Error finding current endpoint: {str(e)}")
             return None
     
     def deploy_model(self, training_job_name: str, 
@@ -171,7 +171,7 @@ class DeploymentPipeline:
         timestamp = datetime.now().strftime('%Y%m%d-%H%M%S')
         endpoint_name = f"{self.config.ENDPOINT_PREFIX}-{timestamp}"
         
-        self.logger.info(f"🚀 Starting model deployment")
+        self.logger.info(f" Starting model deployment")
         self.logger.info(f"   Training Job: {training_job_name}")
         self.logger.info(f"   Endpoint Name: {endpoint_name}")
         self.logger.info(f"   Instance Type: {instance_type}")
@@ -204,7 +204,7 @@ class DeploymentPipeline:
             self.previous_endpoint = self.get_current_production_endpoint()
             
             # Deploy the model
-            self.logger.info("📦 Deploying model to endpoint...")
+            self.logger.info(" Deploying model to endpoint...")
             predictor = model.deploy(
                 initial_instance_count=1,
                 instance_type=instance_type,
@@ -238,7 +238,7 @@ class DeploymentPipeline:
                 'metadata': self.deployment_metadata
             }
             
-            self.logger.info(f"✅ Deployment successful in {deployment_duration:.2f} seconds")
+            self.logger.info(f" Deployment successful in {deployment_duration:.2f} seconds")
             self.notification_manager.send_deployment_success_notification(deployment_results)
             
             return deployment_results
@@ -247,7 +247,7 @@ class DeploymentPipeline:
             deployment_duration = time.time() - deployment_start_time
             error_message = str(e)
             
-            self.logger.error(f"❌ Deployment failed after {deployment_duration:.2f} seconds: {error_message}")
+            self.logger.error(f" Deployment failed after {deployment_duration:.2f} seconds: {error_message}")
             
             # Attempt rollback if enabled
             rollback_results = None
@@ -268,7 +268,7 @@ class DeploymentPipeline:
     
     def _test_endpoint(self, endpoint_name: str) -> Dict[str, Any]:
         """Test the deployed endpoint with sample data"""
-        self.logger.info(f"🧪 Testing endpoint: {endpoint_name}")
+        self.logger.info(f" Testing endpoint: {endpoint_name}")
         
         try:
             runtime_client = boto3.client('sagemaker-runtime', 
@@ -295,12 +295,12 @@ class DeploymentPipeline:
                 'test_data': test_data
             }
             
-            self.logger.info(f"✅ Endpoint test successful (latency: {test_duration*1000:.2f}ms)")
+            self.logger.info(f" Endpoint test successful (latency: {test_duration*1000:.2f}ms)")
             
             return test_results
             
         except Exception as e:
-            self.logger.error(f"❌ Endpoint test failed: {str(e)}")
+            self.logger.error(f" Endpoint test failed: {str(e)}")
             return {
                 'status': 'failed',
                 'error': str(e)
@@ -309,10 +309,10 @@ class DeploymentPipeline:
     def _rollback_deployment(self) -> Dict[str, Any]:
         """Rollback to previous endpoint if deployment fails"""
         if not self.previous_endpoint:
-            self.logger.warning("⚠️ No previous endpoint available for rollback")
+            self.logger.warning(" No previous endpoint available for rollback")
             return {'status': 'no_previous_endpoint'}
         
-        self.logger.info(f"🔄 Rolling back to previous endpoint: {self.previous_endpoint}")
+        self.logger.info(f" Rolling back to previous endpoint: {self.previous_endpoint}")
         
         try:
             # Check if previous endpoint is still available and healthy
@@ -321,20 +321,20 @@ class DeploymentPipeline:
             )
             
             if endpoint_desc['EndpointStatus'] == 'InService':
-                self.logger.info(f"✅ Rollback successful - using {self.previous_endpoint}")
+                self.logger.info(f" Rollback successful - using {self.previous_endpoint}")
                 return {
                     'status': 'success',
                     'rolled_back_to': self.previous_endpoint
                 }
             else:
-                self.logger.error(f"❌ Previous endpoint {self.previous_endpoint} is not InService")
+                self.logger.error(f" Previous endpoint {self.previous_endpoint} is not InService")
                 return {
                     'status': 'failed',
                     'reason': f'Previous endpoint not available: {endpoint_desc["EndpointStatus"]}'
                 }
                 
         except Exception as e:
-            self.logger.error(f"❌ Rollback failed: {str(e)}")
+            self.logger.error(f" Rollback failed: {str(e)}")
             return {
                 'status': 'failed',
                 'error': str(e)
@@ -353,7 +353,7 @@ class DeploymentPipeline:
         pipeline_start_time = time.time()
         
         try:
-            self.logger.info("🚀 Starting Enterprise MLOps Deployment Pipeline")
+            self.logger.info(" Starting Enterprise MLOps Deployment Pipeline")
             
             # Step 1: Find training job if not provided
             if not training_job_name:
@@ -367,11 +367,11 @@ class DeploymentPipeline:
             # Step 3: Deploy if criteria met
             deployment_results = None
             if should_deploy and self.config.AUTO_DEPLOY_ENABLED:
-                self.logger.info("✅ Deployment criteria met - proceeding with deployment")
+                self.logger.info(" Deployment criteria met - proceeding with deployment")
                 deployment_results = self.deploy_model(training_job_name)
             else:
                 reason = "Deployment criteria not met" if not should_deploy else "Auto-deploy disabled"
-                self.logger.info(f"⏸️ Skipping deployment: {reason}")
+                self.logger.info(f"⏸ Skipping deployment: {reason}")
                 
                 # Send notification about skipped deployment
                 skip_notification = {
@@ -395,7 +395,7 @@ class DeploymentPipeline:
                 'config': self.config.to_dict()
             }
             
-            self.logger.info(f"✅ Deployment pipeline completed in {pipeline_duration:.2f} seconds")
+            self.logger.info(f" Deployment pipeline completed in {pipeline_duration:.2f} seconds")
             
             return pipeline_results
             
@@ -408,7 +408,7 @@ class DeploymentPipeline:
                 'pipeline_timestamp': datetime.now().isoformat()
             }
             
-            self.logger.error(f"❌ Deployment pipeline failed: {str(e)}")
+            self.logger.error(f" Deployment pipeline failed: {str(e)}")
             self.notification_manager.send_error_notification(error_results)
             
             return error_results

@@ -1,16 +1,16 @@
-# 🚀 SageMaker Unified Studio MLOps Platform
+#  SageMaker Unified Studio MLOps Platform
 
 A **complete MLOps platform** that combines AWS SageMaker Unified Studio with Infrastructure as Code (Terraform) and automated ML pipelines for enterprise machine learning workflows.
 
-## ✨ What You Get
+##  What You Get
 
-- 🏗️ **Complete AWS Infrastructure**: SageMaker Unified Studio + supporting services
-- 🤖 **Data Science Workspace**: JupyterLab, Canvas (no-code ML), RStudio, Bedrock AI
-- 🔄 **Automated ML Pipeline**: Training, deployment, testing, and notifications
-- 🔒 **Enterprise Security**: CIS-compliant with proper IAM and networking
-- 📊 **Sample Project**: Iris classification with end-to-end workflow
+-  **Complete AWS Infrastructure**: SageMaker Unified Studio + supporting services
+-  **Data Science Workspace**: JupyterLab, Canvas (no-code ML), RStudio, Bedrock AI
+-  **Automated ML Pipeline**: Training, deployment, testing, and notifications
+-  **Enterprise Security**: CIS-compliant with proper IAM and networking
+-  **Sample Project**: Iris classification with end-to-end workflow
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### 1. Prerequisites
 ```bash
@@ -38,7 +38,7 @@ terraform apply
 ```bash
 # Get studio URL
 STUDIO_URL=$(terraform output -raw sagemaker_domain_info | jq -r '.domain_url')
-echo "🎯 Access: $STUDIO_URL"
+echo " Access: $STUDIO_URL"
 ```
 
 ### 4. Run Sample ML Pipeline
@@ -53,32 +53,32 @@ ROLE_ARN=$(cd terraform && terraform output -raw sagemaker_user_profile_role_arn
 ./run_mlops_pipeline.sh --role-arn $ROLE_ARN
 ```
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
-├── 🏗️ terraform/              # Infrastructure as Code
+├──  terraform/              # Infrastructure as Code
 │   ├── main.tf                # Core configuration
 │   ├── sagemaker.tf           # SageMaker Unified Studio
 │   ├── iam.tf                 # Security & roles
 │   ├── s3.tf                  # Storage
 │   └── networking.tf          # VPC & security
 │
-├── 🤖 pipeline/               # ML Pipeline (see pipeline/PIPELINE_README.md)
+├──  pipeline/               # ML Pipeline (see pipeline/PIPELINE_README.md)
 │   ├── training.py            # Model training
 │   ├── deployment.py          # Deployment logic
 │   ├── testing.py             # Testing & validation
 │   └── notifications.py       # Alerts & notifications
 │
-├── 📊 scripts/                # Utilities
-├── 📚 notebook/               # Sample notebooks
-├── 📈 data/                   # Sample data (iris.csv)
+├──  scripts/                # Utilities
+├──  notebook/               # Sample notebooks
+├──  data/                   # Sample data (iris.csv)
 │
 ├── run_pipeline.py            # Pipeline orchestrator
 ├── run_mlops_pipeline.sh      # User-friendly wrapper
 └── requirements.txt           # Python dependencies
 ```
 
-## 🏗️ What Gets Deployed
+##  What Gets Deployed
 
 ### AWS Infrastructure
 - **SageMaker Unified Studio**: Complete data science workspace
@@ -94,20 +94,20 @@ ROLE_ARN=$(cd terraform && terraform output -raw sagemaker_user_profile_role_arn
 - **Bedrock**: Generative AI integration
 - **Data Catalog**: Data discovery and governance
 
-## 📚 Documentation
+##  Documentation
 
-- 📖 **[Pipeline Documentation](pipeline/PIPELINE_README.md)**: ML pipeline technical details
-- 📓 **[Workflow Guide](notebook/data_scientist_workflow_guide.ipynb)**: Step-by-step tutorial
-- 🏗️ **Terraform Files**: Each .tf file has inline documentation
+-  **[Pipeline Documentation](pipeline/PIPELINE_README.md)**: ML pipeline technical details
+-  **[Workflow Guide](notebook/data_scientist_workflow_guide.ipynb)**: Step-by-step tutorial
+-  **Terraform Files**: Each .tf file has inline documentation
 
-## 🧹 Cleanup
+##  Cleanup
 
 ```bash
 cd terraform
 terraform destroy -auto-approve
 ```
 
-## 🔧 Troubleshooting
+##  Troubleshooting
 
 **Permission Issues**
 ```bash
@@ -122,16 +122,16 @@ aws service-quotas get-service-quota --service-code sagemaker --quota-code L-119
 **Pipeline Issues**  
 See [Pipeline README](pipeline/PIPELINE_README.md) for detailed troubleshooting.
 
-## 🤝 Contributing
+##  Contributing
 
 1. Fork the repository
 2. Create feature branch: `git checkout -b feature/name`
 3. Submit pull request with clear description
 
-## 📄 License
+##  License
 
 MIT License - see LICENSE file for details.
 
 ---
 
-*🚀 Enterprise MLOps made simple*
+* Enterprise MLOps made simple*

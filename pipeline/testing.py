@@ -109,7 +109,7 @@ class TestingPipeline:
         Returns:
             Health check results
         """
-        self.logger.info(f"🏥 Testing endpoint health: {endpoint_name}")
+        self.logger.info(f" Testing endpoint health: {endpoint_name}")
         
         try:
             # Check endpoint status
@@ -145,14 +145,14 @@ class TestingPipeline:
             }
             
             if status == 'InService':
-                self.logger.info(f"✅ Endpoint is healthy and InService")
+                self.logger.info(f" Endpoint is healthy and InService")
             else:
-                self.logger.warning(f"⚠️ Endpoint status: {status}")
+                self.logger.warning(f" Endpoint status: {status}")
             
             return health_results
             
         except Exception as e:
-            self.logger.error(f"❌ Health check failed: {str(e)}")
+            self.logger.error(f" Health check failed: {str(e)}")
             return {
                 'status': 'error',
                 'error': str(e),
@@ -169,7 +169,7 @@ class TestingPipeline:
         Returns:
             Prediction test results
         """
-        self.logger.info(f"🧪 Testing endpoint predictions: {endpoint_name}")
+        self.logger.info(f" Testing endpoint predictions: {endpoint_name}")
         
         test_cases = self.get_test_data()
         prediction_results = []
@@ -217,12 +217,12 @@ class TestingPipeline:
                 prediction_results.append(test_result)
                 
                 if is_correct:
-                    self.logger.info(f"    ✅ Correct prediction: {predicted_class}")
+                    self.logger.info(f"     Correct prediction: {predicted_class}")
                 else:
-                    self.logger.warning(f"    ⚠️ Incorrect prediction: {predicted_class} (expected: {test_case['expected_class']})")
+                    self.logger.warning(f"     Incorrect prediction: {predicted_class} (expected: {test_case['expected_class']})")
                 
             except Exception as e:
-                self.logger.error(f"    ❌ Prediction failed: {str(e)}")
+                self.logger.error(f"     Prediction failed: {str(e)}")
                 prediction_results.append({
                     'test_name': test_case['name'],
                     'input_data': test_case['data'],
@@ -248,7 +248,7 @@ class TestingPipeline:
             'test_timestamp': datetime.now().isoformat()
         }
         
-        self.logger.info(f"📊 Prediction test summary:")
+        self.logger.info(f" Prediction test summary:")
         self.logger.info(f"   Accuracy: {accuracy:.2%}")
         self.logger.info(f"   Average latency: {avg_latency:.2f}ms")
         self.logger.info(f"   Correct predictions: {correct_predictions}/{total_predictions}")
@@ -269,7 +269,7 @@ class TestingPipeline:
         Returns:
             Performance test results
         """
-        self.logger.info(f"⚡ Testing endpoint performance: {endpoint_name}")
+        self.logger.info(f" Testing endpoint performance: {endpoint_name}")
         self.logger.info(f"   Concurrent requests: {num_concurrent_requests}")
         self.logger.info(f"   Duration: {duration_seconds} seconds")
         
@@ -334,7 +334,7 @@ class TestingPipeline:
             'performance_test_timestamp': datetime.now().isoformat()
         }
         
-        self.logger.info(f"📈 Performance test results:")
+        self.logger.info(f" Performance test results:")
         self.logger.info(f"   Success rate: {success_rate:.2%}")
         self.logger.info(f"   Throughput: {throughput:.2f} requests/second")
         self.logger.info(f"   Average latency: {avg_latency:.2f}ms")
@@ -354,19 +354,19 @@ class TestingPipeline:
         """
         test_start_time = time.time()
         
-        self.logger.info(f"🧪 Starting comprehensive test suite for {endpoint_name}")
+        self.logger.info(f" Starting comprehensive test suite for {endpoint_name}")
         
         try:
             # Test 1: Health Check
-            self.logger.info("🏥 Running health check...")
+            self.logger.info(" Running health check...")
             health_results = self.test_endpoint_health(endpoint_name)
             
             # Test 2: Prediction Accuracy
-            self.logger.info("🎯 Running prediction tests...")
+            self.logger.info(" Running prediction tests...")
             prediction_results = self.test_endpoint_predictions(endpoint_name)
             
             # Test 3: Performance Testing
-            self.logger.info("⚡ Running performance tests...")
+            self.logger.info(" Running performance tests...")
             performance_results = self.test_endpoint_performance(endpoint_name)
             
             test_duration = time.time() - test_start_time
@@ -416,13 +416,13 @@ class TestingPipeline:
             
             # Send notification based on results
             if overall_status == 'passed':
-                self.logger.info(f"✅ All tests passed for {endpoint_name}")
+                self.logger.info(f" All tests passed for {endpoint_name}")
             elif overall_status == 'warning':
-                self.logger.warning(f"⚠️ Tests completed with warnings for {endpoint_name}")
+                self.logger.warning(f" Tests completed with warnings for {endpoint_name}")
             else:
-                self.logger.error(f"❌ Tests failed for {endpoint_name}")
+                self.logger.error(f" Tests failed for {endpoint_name}")
             
-            self.logger.info(f"🏁 Comprehensive testing completed in {test_duration:.2f} seconds")
+            self.logger.info(f" Comprehensive testing completed in {test_duration:.2f} seconds")
             
             return comprehensive_results
             
@@ -436,6 +436,6 @@ class TestingPipeline:
                 'test_timestamp': datetime.now().isoformat()
             }
             
-            self.logger.error(f"❌ Comprehensive testing failed: {str(e)}")
+            self.logger.error(f" Comprehensive testing failed: {str(e)}")
             
             return error_results

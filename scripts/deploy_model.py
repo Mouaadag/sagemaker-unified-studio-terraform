@@ -41,7 +41,7 @@ def get_latest_training_job(region='us-east-1'):
 def deploy_model(training_job_name, region='us-east-1', instance_type='ml.m5.large'):
     """Deploy a model from a training job using SageMaker SDK."""
     
-    print(f"🚀 Deploying model from training job: {training_job_name}")
+    print(f" Deploying model from training job: {training_job_name}")
     
     # Initialize SageMaker session
     import sagemaker
@@ -50,13 +50,13 @@ def deploy_model(training_job_name, region='us-east-1', instance_type='ml.m5.lar
     # Get execution role
     try:
         role = get_execution_role()
-        print(f"✅ Using execution role: {role}")
+        print(f" Using execution role: {role}")
     except Exception:
         # Fallback to finding role from training job
         sagemaker_client = boto3.client('sagemaker', region_name=region)
         training_job = sagemaker_client.describe_training_job(TrainingJobName=training_job_name)
         role = training_job['RoleArn']
-        print(f"✅ Using role from training job: {role}")
+        print(f" Using role from training job: {role}")
     
     # Get model artifacts from training job
     sagemaker_client = boto3.client('sagemaker', region_name=region)
@@ -65,8 +65,8 @@ def deploy_model(training_job_name, region='us-east-1', instance_type='ml.m5.lar
     model_data = training_job['ModelArtifacts']['S3ModelArtifacts']
     image_uri = training_job['AlgorithmSpecification']['TrainingImage']
     
-    print(f"📦 Model artifacts: {model_data}")
-    print(f"🐳 Container image: {image_uri}")
+    print(f" Model artifacts: {model_data}")
+    print(f" Container image: {image_uri}")
     
     # Create SKLearn model (this handles inference properly)
     model = SKLearnModel(
@@ -82,9 +82,9 @@ def deploy_model(training_job_name, region='us-east-1', instance_type='ml.m5.lar
     timestamp = datetime.now().strftime('%Y%m%d-%H%M%S')
     endpoint_name = f'iris-model-{timestamp}'
     
-    print(f"🎯 Deploying to endpoint: {endpoint_name}")
-    print(f"⚙️ Instance type: {instance_type}")
-    print(f"📍 Region: {region}")
+    print(f" Deploying to endpoint: {endpoint_name}")
+    print(f" Instance type: {instance_type}")
+    print(f" Region: {region}")
     
     # Deploy the model
     try:
@@ -94,17 +94,17 @@ def deploy_model(training_job_name, region='us-east-1', instance_type='ml.m5.lar
             endpoint_name=endpoint_name
         )
         
-        print(f"✅ Deployment successful!")
-        print(f"📍 Endpoint name: {endpoint_name}")
+        print(f" Deployment successful!")
+        print(f" Endpoint name: {endpoint_name}")
         
         # Test the endpoint
-        print("\n🧪 Testing the endpoint...")
+        print("\n Testing the endpoint...")
         test_data = [[5.1, 3.5, 1.4, 0.2]]
         
         try:
             prediction = predictor.predict(test_data)
-            print(f"🎯 Test prediction: {prediction}")
-            print("✅ Endpoint is working correctly!")
+            print(f" Test prediction: {prediction}")
+            print(" Endpoint is working correctly!")
             
             return {
                 'endpoint_name': endpoint_name,
@@ -113,7 +113,7 @@ def deploy_model(training_job_name, region='us-east-1', instance_type='ml.m5.lar
             }
             
         except Exception as e:
-            print(f"⚠️ Endpoint deployed but test failed: {e}")
+            print(f" Endpoint deployed but test failed: {e}")
             return {
                 'endpoint_name': endpoint_name,
                 'status': 'deployed_but_test_failed',
@@ -121,7 +121,7 @@ def deploy_model(training_job_name, region='us-east-1', instance_type='ml.m5.lar
             }
             
     except Exception as e:
-        print(f"❌ Deployment failed: {e}")
+        print(f" Deployment failed: {e}")
         return {
             'status': 'failed',
             'error': str(e)
@@ -140,10 +140,10 @@ def main():
     # Find training job if not specified
     training_job_name = args.training_job
     if not training_job_name:
-        print("🔍 Finding latest training job...")
+        print(" Finding latest training job...")
         training_job_name = get_latest_training_job(args.region)
         if not training_job_name:
-            print("❌ No completed training jobs found")
+            print(" No completed training jobs found")
             sys.exit(1)
     
     # Deploy the model
@@ -157,14 +157,14 @@ def main():
     if args.output_json:
         with open(args.output_json, 'w') as f:
             json.dump(result, f, indent=2)
-        print(f"📄 Results written to: {args.output_json}")
+        print(f" Results written to: {args.output_json}")
     
     # Exit with appropriate code
     if result['status'] == 'success':
-        print("\n🎉 Deployment completed successfully!")
+        print("\n Deployment completed successfully!")
         sys.exit(0)
     else:
-        print(f"\n❌ Deployment failed: {result.get('error', 'Unknown error')}")
+        print(f"\n Deployment failed: {result.get('error', 'Unknown error')}")
         sys.exit(1)
 
 
